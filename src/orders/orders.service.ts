@@ -1,6 +1,10 @@
 import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateOrderDto, PaginationOrderDto } from './dto';
+import {
+  ChangeOrderStatusDto,
+  CreateOrderDto,
+  PaginationOrderDto,
+} from './dto';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
@@ -49,5 +53,18 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
       });
     }
     return order;
+  }
+
+  async changeOrderStatus(changeStatusOrder: ChangeOrderStatusDto) {
+    const { id, status } = changeStatusOrder;
+    const order = await this.order.findFirst({ where: { id } });
+    if (order.status === status) {
+      return order;
+    }
+
+    return await this.order.update({
+      where: { id },
+      data: { status },
+    });
   }
 }
