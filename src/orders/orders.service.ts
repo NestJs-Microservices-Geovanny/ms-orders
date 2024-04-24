@@ -15,7 +15,11 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
     this.logger.log('Connected to the database');
   }
   async create(createOrderDto: CreateOrderDto) {
-    return await this.order.create({ data: createOrderDto });
+    return {
+      service: 'Order Ms',
+      data: createOrderDto,
+    };
+    //return await this.order.create({ data: createOrderDto });
   }
 
   async findAll(orderPaginationDto: PaginationOrderDto) {
